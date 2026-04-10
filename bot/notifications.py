@@ -57,19 +57,61 @@ async def send_message(to: str, body: str, tradie_id: str | None = None) -> str:
 
 
 async def send_invoice_confirmed(tradie: dict, invoice: dict) -> None:
+    from utils import format_date
+    from datetime import datetime, timezone
+
     phone = tradie.get("whatsapp_number", "")
+    business = tradie.get("business_name", "")
+    abn = tradie.get("abn", "")
     number = invoice.get("invoice_number", "")
-    total = format_currency(float(invoice.get("total", 0)))
+    items = invoice.get("line_items", [])
+    subtotal = float(invoice.get("subtotal", 0))
+    gst = float(invoice.get("gst", 0))
+    total = float(invoice.get("total", 0))
     client_name = invoice.get("client_name", "your client")
-
-    body = f"Invoice {number} for {total} sent to {client_name}."
-
+    pdf_url = invoice.get("pdf_url") or invoice.get("pdf_storage_path")
     payment_url = invoice.get("payment_link_url") or invoice.get("stripe_payment_link_url")
-    if payment_url:
-        body += f"\nPay link: {payment_url}"
-    else:
-        body += "\n\nTip: Set up payments so clients can pay online → type 'setup payments'"
+    date_str = format_date(datetime.now(timezone.utc))
 
+    sep = "─" * 30
+    lines = [
+        f"*{business}*",
+        f"ABN {abn}" if abn else "",
+        "",
+        f"*TAX INVOICE {number}*",
+        f"Date: {date_str}",
+        f"To: {client_name}",
+        sep,
+    ]
+
+    for item in items:
+        desc = item.get("description", "Item")
+        qty = item.get("quantity", 1)
+        amount = float(item.get("amount", 0))
+        if qty != 1:
+            desc = f"{desc} x{qty}"
+        lines.append(f"{desc:<24} {format_currency(amount):>10}")
+
+    lines.extend([
+        sep,
+        f"{'Subtotal':<24} {format_currency(subtotal):>10}",
+        f"{'GST (10%)':<24} {format_currency(gst):>10}",
+        f"*{'TOTAL':<24} {format_currency(total):>10}*",
+        sep,
+    ])
+
+    if payment_url:
+        lines.extend(["", f"💳 *Pay online:* {payment_url}"])
+
+    if pdf_url:
+        lines.extend(["", f"📄 *Download PDF:* {pdf_url}"])
+
+    if not payment_url:
+        lines.extend(["", "Tip: Set up payments so clients can pay online → type 'setup payments'"])
+
+    lines.extend(["", f"_Forward this to {client_name} to get paid._"])
+
+    body = "\n".join(line for line in lines if line is not None)
     await send_message(phone, body, tradie.get("id"))
 
 

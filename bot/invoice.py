@@ -164,13 +164,21 @@ async def confirm_invoice(invoice_id: str, tradie: dict) -> dict:
     if payment_link_url:
         update_data["stripe_payment_link_url"] = payment_link_url
 
-    result = sb.table("invoices").update(update_data).eq(
+    sb.table("invoices").update(update_data).eq(
         "id", invoice_id
     ).execute()
 
-    invoice = result.data[0] if result.data else {}
+    # Re-fetch the full invoice with client name for the confirmation message
+    full = sb.table("invoices").select(
+        "*, clients(name)"
+    ).eq("id", invoice_id).single().execute()
+
+    invoice = full.data if full.data else {}
     invoice["pdf_url"] = pdf_url
     invoice["payment_link_url"] = payment_link_url
+    client_rel = invoice.pop("clients", None)
+    if client_rel and isinstance(client_rel, dict):
+        invoice["client_name"] = client_rel.get("name", "your client")
 
     logger.info("Invoice %s confirmed and sent", invoice_id)
     return invoice
