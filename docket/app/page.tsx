@@ -1,68 +1,86 @@
 import Link from "next/link"
-import { buttonVariants } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
+import {
+  MessageSquareText,
+  ClipboardCheck,
+  Banknote,
+  FileText,
+  CreditCard,
+  Bell,
+  BarChart3,
+  Smartphone,
+  Mic,
+  Check,
+  ArrowRight,
+  Terminal,
+} from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
-const steps = [
+const steps: { icon: LucideIcon; title: string; description: string }[] = [
   {
-    icon: "💬",
+    icon: MessageSquareText,
     title: "Message Docket",
     description:
       "Describe the job via text, photo, or voice note on WhatsApp. Whatever's easiest.",
   },
   {
-    icon: "📋",
+    icon: ClipboardCheck,
     title: "Confirm your invoice",
     description:
       "Docket turns it into a proper GST invoice in seconds. Check the draft and reply YES.",
   },
   {
-    icon: "💰",
+    icon: Banknote,
     title: "Get paid",
     description:
       "Your client gets a PDF with a pay link. Money lands in your account in 2 business days.",
   },
 ]
 
-const features = [
+const features: {
+  icon: LucideIcon
+  title: string
+  description: string
+  className: string
+}[] = [
   {
-    icon: "📄",
+    icon: FileText,
     title: "ATO-compliant invoices",
     description:
       "ABN, GST, sequential numbering — everything the tax office wants. Automatically.",
     className: "sm:col-span-2",
   },
   {
-    icon: "💳",
+    icon: CreditCard,
     title: "Online payment links",
     description:
       "Clients pay with one click. No chasing. No awkward phone calls.",
     className: "",
   },
   {
-    icon: "🔔",
+    icon: Bell,
     title: "Overdue reminders",
     description:
       "Automated nudges at 7, 14, and 30 days. You don't lift a finger.",
     className: "",
   },
   {
-    icon: "📊",
+    icon: BarChart3,
     title: "Dashboard & BAS reports",
     description:
       "See what's owed, what's paid, and download quarterly BAS summaries.",
     className: "sm:col-span-2",
   },
   {
-    icon: "📱",
+    icon: Smartphone,
     title: "Works from WhatsApp",
     description:
       "No app to install. No login to remember. Just message like you already do.",
     className: "sm:col-span-2",
   },
   {
-    icon: "🎙️",
+    icon: Mic,
     title: "Voice & photo support",
     description:
       "Snap a photo of a paper docket or send a voice note — AI handles the rest.",
@@ -232,7 +250,7 @@ export default function LandingPage() {
 
         {/* Terminal-style command */}
         <div className="relative mt-10 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-[family-name:var(--font-mono)] text-sm backdrop-blur">
-          <span className="text-green-400">$</span>
+          <Terminal className="h-4 w-4 text-green-400" />
           <span className="text-white/80">
             &quot;Labour 2hrs $80/hr, tap $95, for Mick&quot;
           </span>
@@ -242,9 +260,10 @@ export default function LandingPage() {
         <div className="relative mt-10 flex flex-col gap-3 sm:flex-row">
           <Link
             href="/signup"
-            className="rounded-full bg-white px-8 py-3 text-base font-semibold text-black transition-all hover:bg-white/90 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-base font-semibold text-black transition-all hover:bg-white/90 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
           >
             Start your free 30-day trial
+            <ArrowRight className="h-4 w-4" />
           </Link>
           <a
             href="#how-it-works"
@@ -282,7 +301,9 @@ export default function LandingPage() {
                 key={i}
                 className="group relative rounded-2xl border border-white/10 bg-white/[0.03] p-8 transition-all hover:border-white/20 hover:bg-white/[0.06]"
               >
-                <div className="mb-6 text-4xl">{step.icon}</div>
+                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 ring-1 ring-white/10">
+                  <step.icon className="h-6 w-6 text-purple-400" />
+                </div>
                 <h3 className="text-lg font-semibold text-white">
                   {step.title}
                 </h3>
@@ -325,7 +346,9 @@ export default function LandingPage() {
                   feature.className
                 )}
               >
-                <div className="mb-4 text-3xl">{feature.icon}</div>
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.06] ring-1 ring-white/10 transition-colors group-hover:bg-white/[0.1]">
+                  <feature.icon className="h-5 w-5 text-white/60 transition-colors group-hover:text-white/80" />
+                </div>
                 <h3 className="text-lg font-semibold text-white">
                   {feature.title}
                 </h3>
@@ -433,19 +456,7 @@ export default function LandingPage() {
                       key={f}
                       className="flex items-center gap-3 text-white/60"
                     >
-                      <svg
-                        className="h-4 w-4 shrink-0 text-green-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
+                      <Check className="h-4 w-4 shrink-0 text-green-400" />
                       {f}
                     </li>
                   ))}
