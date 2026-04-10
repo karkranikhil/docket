@@ -29,9 +29,8 @@ REQUIRED_ENV_VARS = [
 def _validate_env() -> None:
     missing = [v for v in REQUIRED_ENV_VARS if not os.getenv(v)]
     if missing:
-        raise RuntimeError(
-            f"Missing required environment variables: {', '.join(missing)}"
-        )
+        logger.error("Missing required environment variables: %s", ", ".join(missing))
+        logger.error("Bot will start but webhook processing will fail until these are set.")
 
 
 app = FastAPI(title="Docket Bot", version="1.0.0")
