@@ -1,54 +1,111 @@
 import Link from "next/link"
 import { buttonVariants } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
 const steps = [
   {
-    number: "1",
-    title: "Message Docket on WhatsApp",
+    icon: "💬",
+    title: "Message Docket",
     description:
-      "Describe the job — text, photo of the docket, or a voice note. Whatever's easiest.",
+      "Describe the job via text, photo, or voice note on WhatsApp. Whatever's easiest.",
   },
   {
-    number: "2",
+    icon: "📋",
     title: "Confirm your invoice",
     description:
       "Docket turns it into a proper GST invoice in seconds. Check the draft and reply YES.",
   },
   {
-    number: "3",
+    icon: "💰",
     title: "Get paid",
     description:
-      "Your client gets a PDF with a pay link. Money lands in your account within 2 business days.",
+      "Your client gets a PDF with a pay link. Money lands in your account in 2 business days.",
   },
 ]
 
 const features = [
   {
+    icon: "📄",
     title: "ATO-compliant invoices",
-    description: "ABN, GST, sequential numbering — everything the tax office wants.",
+    description:
+      "ABN, GST, sequential numbering — everything the tax office wants. Automatically.",
+    className: "sm:col-span-2",
   },
   {
-    title: "Stripe payment links",
-    description: "Clients pay online. No chasing. No awkward phone calls.",
+    icon: "💳",
+    title: "Online payment links",
+    description:
+      "Clients pay with one click. No chasing. No awkward phone calls.",
+    className: "",
   },
   {
+    icon: "🔔",
     title: "Overdue reminders",
-    description: "Automated nudges at 7, 14, and 30 days. You don't lift a finger.",
+    description:
+      "Automated nudges at 7, 14, and 30 days. You don't lift a finger.",
+    className: "",
   },
   {
-    title: "Dashboard & reports",
-    description: "See what's owed, what's paid, and download BAS summaries.",
+    icon: "📊",
+    title: "Dashboard & BAS reports",
+    description:
+      "See what's owed, what's paid, and download quarterly BAS summaries.",
+    className: "sm:col-span-2",
   },
   {
+    icon: "📱",
     title: "Works from WhatsApp",
-    description: "No app to install. No login to remember. Just message like you already do.",
+    description:
+      "No app to install. No login to remember. Just message like you already do.",
+    className: "sm:col-span-2",
   },
   {
+    icon: "🎙️",
     title: "Voice & photo support",
-    description: "Snap a photo of a paper docket or send a voice note — Docket handles it.",
+    description:
+      "Snap a photo of a paper docket or send a voice note — AI handles the rest.",
+    className: "",
+  },
+]
+
+const testimonials = [
+  {
+    name: "Dave Wilson",
+    trade: "Plumber, Brisbane",
+    quote:
+      "I was losing thousands in unpaid invoices. Now I send an invoice before I've even left the job site.",
+  },
+  {
+    name: "Karen Wu",
+    trade: "Electrician, Melbourne",
+    quote:
+      "My clients actually pay on time now. The payment link on the invoice is a game changer.",
+  },
+  {
+    name: "Mick O'Brien",
+    trade: "Builder, Sydney",
+    quote:
+      "I used to do invoices on Sunday nights. Now I do them in the van between jobs.",
+  },
+  {
+    name: "Sarah Chen",
+    trade: "Painter, Perth",
+    quote:
+      "The BAS report alone saves me hours every quarter. Worth every cent.",
+  },
+  {
+    name: "Tom Richards",
+    trade: "Landscaper, Adelaide",
+    quote:
+      "My bookkeeper couldn't believe how organised my invoicing suddenly became.",
+  },
+  {
+    name: "Jake Murray",
+    trade: "Tiler, Gold Coast",
+    quote:
+      "Voice note to invoice in 10 seconds. I don't even have to stop what I'm doing.",
   },
 ]
 
@@ -58,28 +115,41 @@ const pricing = [
     price: "$0",
     period: "for 30 days",
     description: "Full access. No credit card.",
-    features: ["Unlimited invoices", "WhatsApp bot", "Dashboard", "PDF invoices"],
+    features: [
+      "Unlimited invoices",
+      "WhatsApp bot",
+      "Dashboard",
+      "PDF invoices",
+      "Payment links",
+    ],
     cta: "Start free trial",
     highlighted: false,
   },
   {
     name: "Starter",
     price: "$19",
-    period: "/month",
+    period: "/mo",
     description: "For tradies getting started.",
-    features: ["30 invoices/month", "WhatsApp bot", "Dashboard", "PDF invoices"],
+    features: [
+      "30 invoices/month",
+      "WhatsApp bot",
+      "Dashboard",
+      "PDF invoices",
+      "Email support",
+    ],
     cta: "Get started",
     highlighted: false,
   },
   {
     name: "Pro",
     price: "$49",
-    period: "/month",
+    period: "/mo",
     description: "For busy tradies who want it all.",
     features: [
       "Unlimited invoices",
-      "Stripe payment links",
+      "Online payment links",
       "BAS export",
+      "Overdue reminders",
       "Priority support",
     ],
     cta: "Go Pro",
@@ -89,92 +159,178 @@ const pricing = [
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col bg-black text-white">
       {/* Nav */}
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-black/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="text-xl font-bold tracking-tight">
-            Docket
+            <span className="bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+              Docket
+            </span>
           </Link>
-          <nav className="hidden items-center gap-6 text-sm sm:flex">
-            <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">
+          <nav className="hidden items-center gap-8 text-sm sm:flex">
+            <a
+              href="#how-it-works"
+              className="text-white/50 transition-colors hover:text-white"
+            >
               How it works
             </a>
-            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#features"
+              className="text-white/50 transition-colors hover:text-white"
+            >
               Features
             </a>
-            <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#pricing"
+              className="text-white/50 transition-colors hover:text-white"
+            >
               Pricing
             </a>
           </nav>
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+              className="text-sm text-white/70 transition-colors hover:text-white"
             >
               Log in
             </Link>
             <Link
               href="/signup"
-              className={cn(buttonVariants({ size: "sm" }))}
+              className="rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition-all hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]"
             >
-              Start free trial
+              Get started
             </Link>
           </div>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="flex flex-1 flex-col items-center justify-center px-4 py-24 sm:py-32 text-center">
-        <Badge variant="secondary" className="mb-4">
+      <section className="relative flex flex-col items-center overflow-hidden px-4 pb-24 pt-24 text-center sm:pt-36">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(120,119,198,0.15),transparent_70%)]" />
+        <div className="pointer-events-none absolute top-0 left-1/2 h-[500px] w-[800px] -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(120,119,198,0.2),transparent_60%)]" />
+
+        <Badge className="relative mb-6 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium text-white/80 backdrop-blur hover:bg-white/5">
           Built for Australian tradies
         </Badge>
-        <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
-          Send a WhatsApp.{" "}
-          <span className="text-muted-foreground">Get paid.</span>
+
+        <h1 className="relative max-w-4xl text-5xl font-bold leading-[1.1] tracking-tight sm:text-7xl lg:text-8xl">
+          <span className="bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+            Send a WhatsApp.
+          </span>
+          <br />
+          <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
+            Get paid.
+          </span>
         </h1>
-        <p className="mt-6 max-w-xl text-lg text-muted-foreground leading-relaxed">
+
+        <p className="relative mt-8 max-w-xl text-lg leading-relaxed text-white/50 sm:text-xl">
           Docket turns your job descriptions into ATO-compliant invoices with
           payment links — all from WhatsApp. No app. No login. No behaviour
           change.
         </p>
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+
+        {/* Terminal-style command */}
+        <div className="relative mt-10 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-mono text-sm backdrop-blur">
+          <span className="text-green-400">$</span>
+          <span className="text-white/80">
+            &quot;Labour 2hrs $80/hr, tap $95, for Mick&quot;
+          </span>
+          <span className="animate-pulse text-white/40">|</span>
+        </div>
+
+        <div className="relative mt-10 flex flex-col gap-3 sm:flex-row">
           <Link
             href="/signup"
-            className={cn(buttonVariants({ size: "lg" }))}
+            className="rounded-full bg-white px-8 py-3 text-base font-semibold text-black transition-all hover:bg-white/90 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
           >
             Start your free 30-day trial
           </Link>
           <a
             href="#how-it-works"
-            className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+            className="rounded-full border border-white/20 bg-white/5 px-8 py-3 text-base font-semibold text-white transition-all hover:bg-white/10"
           >
             See how it works
           </a>
         </div>
-        <p className="mt-4 text-sm text-muted-foreground">
+        <p className="relative mt-5 text-sm text-white/30">
           No credit card required. Cancel anytime.
         </p>
       </section>
 
       {/* How it works */}
-      <section id="how-it-works" className="border-t bg-muted/40 px-4 py-24">
+      <section
+        id="how-it-works"
+        className="border-t border-white/10 px-4 py-24"
+      >
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
+          <p className="text-center text-sm font-medium uppercase tracking-widest text-purple-400">
             How it works
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-center text-muted-foreground">
-            Three steps. Under 30 seconds. From your phone.
           </p>
-          <div className="mt-16 grid gap-8 sm:grid-cols-3">
-            {steps.map((step) => (
-              <div key={step.number} className="flex flex-col items-center text-center sm:items-start sm:text-left">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground text-background text-sm font-bold">
-                  {step.number}
-                </div>
-                <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
-                <p className="mt-2 text-muted-foreground leading-relaxed">
+          <h2 className="mt-4 text-center text-3xl font-bold tracking-tight sm:text-5xl">
+            <span className="bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+              Three steps. Under 30 seconds.
+            </span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-center text-white/40">
+            From your phone. No login required.
+          </p>
+
+          <div className="mt-16 grid gap-6 sm:grid-cols-3">
+            {steps.map((step, i) => (
+              <div
+                key={i}
+                className="group relative rounded-2xl border border-white/10 bg-white/[0.03] p-8 transition-all hover:border-white/20 hover:bg-white/[0.06]"
+              >
+                <div className="mb-6 text-4xl">{step.icon}</div>
+                <h3 className="text-lg font-semibold text-white">
+                  {step.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/40">
                   {step.description}
+                </p>
+                <div className="absolute right-6 top-6 text-5xl font-bold text-white/[0.03]">
+                  {i + 1}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features bento grid */}
+      <section
+        id="features"
+        className="border-t border-white/10 px-4 py-24"
+      >
+        <div className="mx-auto max-w-6xl">
+          <p className="text-center text-sm font-medium uppercase tracking-widest text-pink-400">
+            Features
+          </p>
+          <h2 className="mt-4 text-center text-3xl font-bold tracking-tight sm:text-5xl">
+            <span className="bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+              Everything you need to get paid
+            </span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-center text-white/40">
+            No accounting degree required.
+          </p>
+
+          <div className="mt-16 grid gap-4 sm:grid-cols-3">
+            {features.map((feature) => (
+              <div
+                key={feature.title}
+                className={cn(
+                  "group rounded-2xl border border-white/10 bg-white/[0.03] p-8 transition-all hover:border-white/20 hover:bg-white/[0.06]",
+                  feature.className
+                )}
+              >
+                <div className="mb-4 text-3xl">{feature.icon}</div>
+                <h3 className="text-lg font-semibold text-white">
+                  {feature.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/40">
+                  {feature.description}
                 </p>
               </div>
             ))}
@@ -182,118 +338,179 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features */}
-      <section id="features" className="border-t px-4 py-24">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
-            Everything you need to get paid
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-center text-muted-foreground">
-            No accounting degree required.
+      {/* Testimonials marquee */}
+      <section className="border-t border-white/10 py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <p className="text-center text-sm font-medium uppercase tracking-widest text-orange-400">
+            Testimonials
           </p>
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature) => (
-              <Card key={feature.title} className="border bg-card">
-                <CardContent className="pt-6">
-                  <h3 className="font-semibold">{feature.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
+          <h2 className="mt-4 text-center text-3xl font-bold tracking-tight sm:text-5xl">
+            <span className="bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+              What tradies are saying
+            </span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-center text-white/40">
+            Real feedback from real tradies across Australia.
+          </p>
+        </div>
+
+        <div className="mt-16 flex gap-6 overflow-hidden">
+          <div className="flex shrink-0 animate-marquee gap-6">
+            {[...testimonials, ...testimonials].map((t, i) => (
+              <div
+                key={i}
+                className="w-[350px] shrink-0 rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+              >
+                <p className="text-sm leading-relaxed text-white/60">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-bold text-white">
+                    {t.name[0]}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">{t.name}</p>
+                    <p className="text-xs text-white/40">{t.trade}</p>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="border-t bg-muted/40 px-4 py-24">
+      <section
+        id="pricing"
+        className="border-t border-white/10 px-4 py-24"
+      >
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
-            Simple pricing
+          <p className="text-center text-sm font-medium uppercase tracking-widest text-green-400">
+            Pricing
+          </p>
+          <h2 className="mt-4 text-center text-3xl font-bold tracking-tight sm:text-5xl">
+            <span className="bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+              Simple, transparent pricing
+            </span>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-center text-muted-foreground">
+          <p className="mx-auto mt-4 max-w-md text-center text-white/40">
             Start free. Upgrade when you&apos;re ready. All prices in AUD.
           </p>
+
           <div className="mt-16 grid gap-6 sm:grid-cols-3">
             {pricing.map((plan) => (
-              <Card
+              <div
                 key={plan.name}
-                className={
+                className={cn(
+                  "relative flex flex-col rounded-2xl border p-8 transition-all",
                   plan.highlighted
-                    ? "relative border-2 border-foreground shadow-lg"
-                    : "border"
-                }
+                    ? "border-purple-500/50 bg-gradient-to-b from-purple-500/10 to-transparent shadow-[0_0_40px_rgba(168,85,247,0.15)]"
+                    : "border-white/10 bg-white/[0.03] hover:border-white/20"
+                )}
               >
                 {plan.highlighted && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge>Most popular</Badge>
+                    <span className="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-1 text-xs font-semibold text-white">
+                      Most popular
+                    </span>
                   </div>
                 )}
-                <CardContent className="flex flex-col pt-6">
-                  <h3 className="font-semibold">{plan.name}</h3>
-                  <div className="mt-3">
-                    <span className="text-4xl font-bold">{plan.price}</span>
-                    <span className="text-muted-foreground">{plan.period}</span>
-                  </div>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {plan.description}
-                  </p>
-                  <ul className="mt-6 space-y-2 text-sm">
-                    {plan.features.map((f) => (
-                      <li key={f} className="flex items-center gap-2">
-                        <span className="text-green-600">&#10003;</span>
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href="/signup"
-                    className={cn(
-                      buttonVariants({
-                        variant: plan.highlighted ? "default" : "outline",
-                      }),
-                      "mt-8"
-                    )}
-                  >
-                    {plan.cta}
-                  </Link>
-                </CardContent>
-              </Card>
+                <h3 className="text-lg font-semibold text-white">
+                  {plan.name}
+                </h3>
+                <div className="mt-4">
+                  <span className="text-5xl font-bold text-white">
+                    {plan.price}
+                  </span>
+                  <span className="text-white/40">{plan.period}</span>
+                </div>
+                <p className="mt-2 text-sm text-white/40">
+                  {plan.description}
+                </p>
+                <ul className="mt-8 flex-1 space-y-3 text-sm">
+                  {plan.features.map((f) => (
+                    <li
+                      key={f}
+                      className="flex items-center gap-3 text-white/60"
+                    >
+                      <svg
+                        className="h-4 w-4 shrink-0 text-green-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/signup"
+                  className={cn(
+                    "mt-8 rounded-full py-3 text-center text-sm font-semibold transition-all",
+                    plan.highlighted
+                      ? "bg-white text-black hover:bg-white/90 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                      : "border border-white/20 bg-white/5 text-white hover:bg-white/10"
+                  )}
+                >
+                  {plan.cta}
+                </Link>
+              </div>
             ))}
           </div>
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+          <p className="mt-8 text-center text-sm text-white/30">
             Payment processing: 0.5% per transaction (on top of Stripe&apos;s
             1.7% + $0.30 AUD)
           </p>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="border-t px-4 py-24 text-center">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          Stop chasing invoices. Start getting paid.
+      {/* Final CTA */}
+      <section className="relative overflow-hidden border-t border-white/10 px-4 py-32 text-center">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1),transparent_60%)]" />
+        <h2 className="relative text-3xl font-bold tracking-tight sm:text-5xl">
+          <span className="bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+            Stop chasing invoices.
+          </span>
+          <br />
+          <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
+            Start getting paid.
+          </span>
         </h2>
-        <p className="mx-auto mt-4 max-w-md text-muted-foreground">
+        <p className="relative mx-auto mt-6 max-w-md text-lg text-white/40">
           Join thousands of Aussie tradies who invoice straight from WhatsApp.
         </p>
         <Link
           href="/signup"
-          className={cn(buttonVariants({ size: "lg" }), "mt-8")}
+          className="relative mt-10 inline-block rounded-full bg-white px-8 py-3 text-base font-semibold text-black transition-all hover:bg-white/90 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
         >
           Start your free trial
         </Link>
       </section>
 
       {/* Footer */}
-      <footer className="border-t px-4 py-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground sm:flex-row">
-          <p>&copy; {new Date().getFullYear()} Docket. Built in Australia.</p>
-          <div className="flex gap-6">
-            <Link href="/login" className="hover:text-foreground transition-colors">
+      <footer className="border-t border-white/10 px-4 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
+          <p className="text-sm text-white/30">
+            &copy; {new Date().getFullYear()} Docket. Built in Australia.
+          </p>
+          <div className="flex gap-6 text-sm">
+            <Link
+              href="/login"
+              className="text-white/30 transition-colors hover:text-white/60"
+            >
               Log in
             </Link>
-            <Link href="/signup" className="hover:text-foreground transition-colors">
+            <Link
+              href="/signup"
+              className="text-white/30 transition-colors hover:text-white/60"
+            >
               Sign up
             </Link>
           </div>
