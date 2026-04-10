@@ -48,7 +48,7 @@ export default async function DashboardPage({
     .reduce((sum, inv) => sum + Number(inv.total), 0)
 
   const invoicesThisMonth = allInvoices.filter(
-    (inv) => new Date(inv.created_at) >= startOfMonth
+    (inv) => inv.created_at && new Date(inv.created_at) >= startOfMonth
   ).length
 
   return (

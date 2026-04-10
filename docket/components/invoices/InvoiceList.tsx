@@ -103,7 +103,7 @@ export function InvoiceList({
                 <StatusBadge status={invoice.status as InvoiceStatus} />
               </TableCell>
               <TableCell className="text-muted-foreground">
-                {formatDate(invoice.created_at)}
+                {invoice.created_at ? formatDate(invoice.created_at) : "—"}
               </TableCell>
             </TableRow>
           ))}

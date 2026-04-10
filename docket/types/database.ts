@@ -1,4 +1,3 @@
-Initialising login role...
 export type Json =
   | string
   | number
@@ -437,3 +436,24 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
+// Convenience aliases used throughout the codebase
+export type Tradie = Tables<"tradies">
+export type Client = Tables<"clients">
+export type Invoice = Tables<"invoices">
+export type MessageLog = Tables<"message_log">
+
+export type InvoiceStatus =
+  | "draft"
+  | "confirmed"
+  | "sent"
+  | "paid"
+  | "overdue"
+  | "void"
+
+export interface LineItem {
+  description: string
+  quantity: number
+  unit_price: number
+  amount: number
+}
