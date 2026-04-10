@@ -1,0 +1,51 @@
+# Dependencies
+docket/node_modules/
+docket/.pnp
+docket/.pnp.*
+
+# Next.js
+docket/.next/
+docket/out/
+docket/build/
+
+# Python
+bot/__pycache__/
+bot/**/__pycache__/
+bot/.pytest_cache/
+bot/venv/
+bot/.venv/
+*.pyc
+
+# Environment files — NEVER commit secrets
+.env
+.env.*
+!.env.example
+docket/.env
+docket/.env.*
+!docket/.env.example
+bot/.env
+bot/.env.*
+!bot/.env.example
+
+# OS
+.DS_Store
+*.pem
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Vercel
+docket/.vercel
+
+# TypeScript
+*.tsbuildinfo
+docket/next-env.d.ts
+
+# Supabase local
+docket/supabase/.temp/
+
+# IDE
+.cursor/

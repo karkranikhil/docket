@@ -1,0 +1,129 @@
+# Docket — Cursor Rules
+
+## Project
+
+WhatsApp-to-invoice SaaS for Australian tradies.
+Two systems: Python FastAPI bot + Next.js 15 dashboard.
+Single source of truth: Supabase Postgres.
+
+Read PRD.md before writing any code.
+
+---
+
+## Architecture Rules (never violate these)
+
+1. **SUPABASE_SERVICE_ROLE_KEY** — bot only. Never in Next.js client code. Never in browser. Never in git.
+2. **NEXT_PUBLIC_SUPABASE_ANON_KEY** — dashboard only. RLS enforced. Tradie sees only their own rows.
+3. **Every table has RLS enabled**. No exceptions. Every new table needs a policy.
+4. **invoice_counter is atomic** — always use `UPDATE tradies SET invoice_counter = invoice_counter + 1 RETURNING invoice_counter`. Never read-then-write.
+5. **Confirm before send** — bot never sends a PDF to a client without tradie saying YES first.
+6. **GST is always 10% in Australia** — `gst = subtotal * 0.10`. If gst_included=true, `subtotal = total / 1.1`.
+7. **Invoice numbers never reset, never have gaps** — INV-0001, INV-0002... across the tradie's entire account lifetime.
+
+---
+
+## Stack
+
+- **Next.js 15** — App Router, Server Components by default. Client components only for interactivity.
+- **Supabase** — `@supabase/supabase-js`, `@supabase/ssr`. Use `createServerClient` in server components, `createBrowserClient` in client components.
+- **Tailwind + Shadcn/UI** — use Shadcn components. Don't hand-roll UI.
+- **TypeScript** — strict mode. No `any`.
+- **Python FastAPI** — async throughout. `supabase-py` for DB. `httpx` for async HTTP.
+- **pdf-lib** — inside Supabase Edge Function (Deno). Not in Next.js.
+- **Stripe** — Connect Express. Always check `charges_enabled AND payouts_enabled` before creating payment links.
+
+---
+
+## Code Style
+
+### TypeScript / Next.js
+```typescript
+// ✅ Server component (default)
+export default async function InvoicePage() {
+  const supabase = createServerClient()
+  const { data } = await supabase.from('invoices').select('*')
+  return <InvoiceList invoices={data} />
+}
+
+// ✅ Client component (only when needed for interactivity)
+'use client'
+export function InvoiceList({ invoices }: { invoices: Invoice[] }) { ... }
+
+// ❌ Never use service_role key in Next.js
+const supabase = createClient(url, SERVICE_ROLE_KEY) // NEVER
+```
+
+### Python (bot)
+```python
+# ✅ Always async
+@app.post("/webhook")
+async def handle_webhook(request: Request):
+    ...
+
+# ✅ Use service_role for all bot DB operations
+supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+
+# ✅ Always validate signature on Twilio webhooks
+from twilio.request_validator import RequestValidator
+validator = RequestValidator(TWILIO_AUTH_TOKEN)
+```
+
+### SQL
+```sql
+-- ✅ Always enable RLS
+alter table new_table enable row level security;
+
+-- ✅ Always add policy
+create policy "tradie sees own rows"
+  on new_table for all
+  using (tradie_id = (select id from tradies where user_id = auth.uid()));
+
+-- ✅ Atomic counter (never read-then-write)
+UPDATE tradies SET invoice_counter = invoice_counter + 1
+WHERE id = $1 RETURNING invoice_counter;
+```
+
+---
+
+## File Ownership by Agent
+
+Each agent owns specific files. Don't create files outside your agent's scope.
+
+| Agent | Owns |
+|-------|------|
+| Agent 1 — Database | `supabase/migrations/`, `types/database.ts`, `supabase/seed.sql` |
+| Agent 2 — Bot | `bot/` (all Python files) |
+| Agent 3 — Dashboard | `app/`, `components/`, `middleware.ts`, `lib/supabase/` |
+| Agent 4 — Payments | `lib/stripe/`, `app/api/stripe/`, `supabase/functions/stripe-webhook/`, `app/(dashboard)/settings/payments/` |
+| Agent 5 — PDF | `supabase/functions/generate-pdf/`, `supabase/functions/send-reminders/` |
+
+---
+
+## Australian-specific requirements
+
+- **ABN validation**: 11-digit checksum algorithm (not just length check)
+- **GST**: Always 10%. Show as separate line on invoice.
+- **ATO invoice requirements**: ABN, invoice number, date, description, GST amount, total
+- **Invoice numbers**: Sequential, never reset — ATO requirement
+- **Currency**: Always AUD. Format as `$1,234.50`
+- **Dates**: `DD/MM/YYYY` for display (Australian format)
+- **Phone numbers**: E.164 format in DB (`+61412345678`), display as `0412 345 678`
+
+---
+
+## Tone / UX
+
+- Tradies are not accountants. Keep all UI language plain.
+- Never say "Stripe" to the tradie. Say "payments" or "bank account".
+- Never say "tax invoice". Say "invoice".
+- Dashboard metric cards: big numbers, clear labels, no jargon.
+- WhatsApp replies: short, punchy, emoji sparingly.
+
+---
+
+## Testing
+
+- Every GPT-4o prompt change requires running the 500-message test suite (`bot/tests/test_parser.py`)
+- Every SQL migration requires a rollback statement
+- Invoice counter atomicity must be tested under concurrent load
+- RLS must be tested: tradie A cannot access tradie B's data
