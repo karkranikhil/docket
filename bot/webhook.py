@@ -33,9 +33,19 @@ def _get_supabase():
 
 def _validate_twilio_signature(request: Request, form_data: dict) -> bool:
     auth_token = os.getenv("TWILIO_AUTH_TOKEN", "")
+    if not auth_token:
+        logger.error("TWILIO_AUTH_TOKEN not set — cannot validate signature")
+        return False
+
     validator = RequestValidator(auth_token)
     signature = request.headers.get("X-Twilio-Signature", "")
-    url = str(request.url)
+
+    # Behind a reverse proxy (Railway, Vercel, etc.) request.url uses the
+    # internal scheme/host. Reconstruct the public URL that Twilio signed.
+    proto = request.headers.get("X-Forwarded-Proto", "https")
+    host = request.headers.get("X-Forwarded-Host") or request.headers.get("Host", "")
+    url = f"{proto}://{host}{request.url.path}"
+
     return validator.validate(url, form_data, signature)
 
 
