@@ -231,7 +231,7 @@ export default function LandingPage() {
         </p>
 
         {/* Terminal-style command */}
-        <div className="relative mt-10 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-mono text-sm backdrop-blur">
+        <div className="relative mt-10 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-[family-name:var(--font-mono)] text-sm backdrop-blur">
           <span className="text-green-400">$</span>
           <span className="text-white/80">
             &quot;Labour 2hrs $80/hr, tap $95, for Mick&quot;
