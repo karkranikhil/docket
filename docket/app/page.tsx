@@ -1,7 +1,8 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 const steps = [
   {
@@ -107,12 +108,18 @@ export default function LandingPage() {
             </a>
           </nav>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/login">Log in</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href="/signup">Start free trial</Link>
-            </Button>
+            <Link
+              href="/login"
+              className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+            >
+              Log in
+            </Link>
+            <Link
+              href="/signup"
+              className={cn(buttonVariants({ size: "sm" }))}
+            >
+              Start free trial
+            </Link>
           </div>
         </div>
       </header>
@@ -132,12 +139,18 @@ export default function LandingPage() {
           change.
         </p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-          <Button size="lg" asChild>
-            <Link href="/signup">Start your free 30-day trial</Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild>
-            <a href="#how-it-works">See how it works</a>
-          </Button>
+          <Link
+            href="/signup"
+            className={cn(buttonVariants({ size: "lg" }))}
+          >
+            Start your free 30-day trial
+          </Link>
+          <a
+            href="#how-it-works"
+            className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+          >
+            See how it works
+          </a>
         </div>
         <p className="mt-4 text-sm text-muted-foreground">
           No credit card required. Cancel anytime.
@@ -234,13 +247,17 @@ export default function LandingPage() {
                       </li>
                     ))}
                   </ul>
-                  <Button
-                    className="mt-8"
-                    variant={plan.highlighted ? "default" : "outline"}
-                    asChild
+                  <Link
+                    href="/signup"
+                    className={cn(
+                      buttonVariants({
+                        variant: plan.highlighted ? "default" : "outline",
+                      }),
+                      "mt-8"
+                    )}
                   >
-                    <Link href="/signup">{plan.cta}</Link>
-                  </Button>
+                    {plan.cta}
+                  </Link>
                 </CardContent>
               </Card>
             ))}
@@ -260,9 +277,12 @@ export default function LandingPage() {
         <p className="mx-auto mt-4 max-w-md text-muted-foreground">
           Join thousands of Aussie tradies who invoice straight from WhatsApp.
         </p>
-        <Button size="lg" className="mt-8" asChild>
-          <Link href="/signup">Start your free trial</Link>
-        </Button>
+        <Link
+          href="/signup"
+          className={cn(buttonVariants({ size: "lg" }), "mt-8")}
+        >
+          Start your free trial
+        </Link>
       </section>
 
       {/* Footer */}
